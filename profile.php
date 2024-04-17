@@ -2,9 +2,9 @@
 
 // include 'session.php';
 include 'connection.php';
-session_start();
-var_dump($_SESSION);
-// $user_name = $_SESSION['user_name'];
+include 'auth.php';
+$user_name = $_SESSION['user_name'];
+$id = $_SESSION['id'];
 $msg1 = 'SELECT * FROM user_details where user_id = ' . $id;
 $res1 = $conn->query($msg1);
 $details = $res1->fetch_array();
@@ -40,7 +40,7 @@ $user = $res2->fetch_array();
                                                 <span for="name">Name</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $user[1] . " " . $user[2] ?></span>
+                                                <span><?php echo $user[2] . " " . $user[3] ?></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -56,7 +56,7 @@ $user = $res2->fetch_array();
                                                 <span for="mail">Email</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $user[3] ?></span>
+                                                <span><?php echo $user[4] ?></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -64,7 +64,7 @@ $user = $res2->fetch_array();
                                                 <span for="phone">Phone No.</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $user[5] ?></span>
+                                                <span><?php echo $user[6] ?></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">

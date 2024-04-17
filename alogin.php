@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
-
+    
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Admin Login Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 <?php
 include 'connection.php';
 
-if (isset($_POST['login'])) {
+if (isset($_POST['alogin'])) {
     $email = $_POST['email'];
     $password = $_POST['post'];
     $flag = true;
@@ -36,23 +36,24 @@ if (isset($_POST['login'])) {
           </div>';
         }
         elseif ($data1->num_rows > 0){
-            header("Location: index.php?msg=login");
-            $user_name = $details['fname'];
             session_start();
-            $id = $details['id'];
-            // $_SESSION['id'] = $id;
-            // var_dump($_SESSION['id']);
-            $_SESSION['email'] = $email;
-            $_SESSION['user_name'] = $user_name;
-
-        } else {
-            header("Location: completeProfile.php");
             $user_name = $details['fname'];
             $id = $details['id'];
-            session_start();
+            $_SESSION['ltime'] = time();
             $_SESSION['id'] = $id;
             $_SESSION['email'] = $email;
             $_SESSION['user_name'] = $user_name;
+            header("Location: index.php");
+
+        } else {
+            session_start();
+            $user_name = $details['fname'];
+            $id = $details['id'];
+            $_SESSION['id'] = $id;
+            $_SESSION['ltime'] = (int)time();
+            $_SESSION['email'] = $email;
+            $_SESSION['user_name'] = $user_name;
+            header("Location: completeProfile.php");
         }
     } else {
         echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
@@ -98,9 +99,9 @@ else if(isset($_GET['msg'])){
                                     </div>
 
                                     <div class="d-flex mt-3 justify-content-center">
-                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init name="login" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Login</button>
+                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init name="alogin" class="btn btn-success btn-block btn-lg gradient-custom-4" style="color: white;">Login</button>
                                     </div>
-                                    <p class="text-center text-muted mt-3 mb-0">Don't have an account? <a href="signup.php" class="fw-bold text-body"><u>SignUp here</u></a></p>
+                                    <p class="text-center text-muted mt-3 mb-0">Don't have an account? <a href="asignup.php" class="fw-bold text-body"><u>SignUp here</u></a></p>
                                 </form>
                             </div>
                         </div>

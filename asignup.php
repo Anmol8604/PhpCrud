@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SignUp</title>
+    <title>Admin SignUp Page</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -127,7 +127,7 @@
         else{
             $sql = "INSERT INTO users (fname, lname, email, password, phone) VALUES ('$fname', '$lname', '$email', '$pass1', '$phone')";
             $conn->query($sql);
-            header("Location: login.php?msg=NewUser");
+            header("Location: alogin.php?msg=NewUser");
         }
     }
     ?>
@@ -181,10 +181,10 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4">Register</button>
                                     </div>
 
-                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="login.php" class="fw-bold text-body"><u>Login here</u></a></p>
+                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="alogin.php" class="fw-bold text-body"><u>Login here</u></a></p>
 
                                 </form>
 

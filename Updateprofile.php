@@ -1,8 +1,8 @@
 <?php
-include 'session.php';
+include 'auth.php';
 include 'connection.php';
-
 $user_name = $_SESSION['user_name'];
+$id = $_SESSION['id'];
 $msg1 = 'SELECT * FROM user_details where user_id = ' . $id;
 $res1 = $conn->query($msg1);
 $details = $res1->fetch_array();
@@ -106,17 +106,17 @@ if (isset($_POST['update'])) {
     }
 
     if (!$flag) {
-        echo "<div style='z-index:1; max-width: 400px; min-width: 300px;' class='modal-dialog position-absolute top-0 end-0 me-4'>";
-        echo "<div class='modal-content'>";
-        echo "    <div class='modal-header  d-flex justify-content-between'>";
-        echo "        <h1 class='modal-title fs-5' id='exampleModalLabel'>Fix these Errors</h1>";
-        echo "        <a href='signup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>";
-        echo "    </div>";
-        echo "    <div class='modal-body'>";
-        echo "        $error";
-        echo "    </div>";
-        echo "</div>";
-        echo "</div>";
+        echo "<div style='z-index:1; max-width: 400px; min-width: 300px;' class='modal-dialog position-absolute top-0 end-0 me-4'>
+        <div class='modal-content'>
+            <div class='modal-header  d-flex justify-content-between'>
+                <h1 class='modal-title fs-5' id='exampleModalLabel'>Fix these Errors</h1>
+                <a href='asignup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>
+            </div>
+            <div class='modal-body'>
+                $error
+            </div>
+        </div>
+        </div>";
     } else {
         $hobbies = $_POST['hobbies'];
         $msg = "UPDATE users SET fname = '$fname', lname = '$lname', phone = $phone, email = '$email' WHERE id = $id;";
@@ -164,21 +164,21 @@ if (isset($_POST['update'])) {
                                             <div class="col-7">
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example1cg">First Name</label>
-                                                    <input type="text" id="form3Example1cg" value="<?php echo $user[1] ?>" class="form-control" name="fname" />
+                                                    <input type="text" id="form3Example1cg" value="<?php echo $user[2] ?>" class="form-control" name="fname" />
                                                 </div>
 
                                                 <div class="mb-2 ">
                                                     <label class="form-label" for="form3Example2cg">Last Name</label>
-                                                    <input type="text" name="lname" id="form3Example2cg" value="<?php echo $user[2] ?>" class="form-control" />
+                                                    <input type="text" name="lname" id="form3Example2cg" value="<?php echo $user[3] ?>" class="form-control" />
                                                 </div>
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example4cg">Email</label>
-                                                    <input type="mail" name="email" id="form3Example4cg" value="<?php echo $user[3] ?>" class="form-control" />
+                                                    <input type="mail" name="email" id="form3Example4cg" value="<?php echo $user[4] ?>" class="form-control" />
                                                 </div>
 
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example4cdg">Phone No.</label>
-                                                    <input type="tel" name="phone" id="form3Example4cdg" value="<?php echo $user[5] ?>" class="form-control" />
+                                                    <input type="tel" name="phone" id="form3Example4cdg" value="<?php echo $user[6] ?>" class="form-control" />
                                                 </div>
                                                 <!-- City -->
                                                 <div class="mb-2">
@@ -312,11 +312,11 @@ if (isset($_POST['update'])) {
                                             </div>
                                         </div>
                                         <!-- Submit button -->
-                                        <div class="mt-4 mb-8 d-flex justify-content-around">
-                                            <button name='update' type="submit" class="btn btn-primary">Update</button>
-                                            <a href="index.php" class="btn btn-primary"> Go Back</a>
-                                        </div>
                                     </form>
+                                    <div class="mt-4 mb-8 d-flex justify-content-around">
+                                        <button name='update' onclick="update(event)" type="submit" class="btn btn-primary">Update</button>
+                                        <a href="index.php" class="btn btn-primary"> Go Back</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -326,6 +326,18 @@ if (isset($_POST['update'])) {
         </section>
     </main>
     <script>
+        function update(event) {
+            event.preventDefault();
+            jQuery.ajax({
+                url: 'updateprofile.php',
+                type: 'post',
+                data: " ",
+                success: function() {
+                    console.log("data");
+                }
+            });
+        }
+
         document.getElementById('imageupdate').style.display = 'none';
         document.querySelector('.uImg').addEventListener('click', function() {
             document.getElementById('imageupdate').click();
@@ -340,6 +352,7 @@ if (isset($_POST['update'])) {
             reader.readAsDataURL(file);
         })
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </body>
 
 </html>
