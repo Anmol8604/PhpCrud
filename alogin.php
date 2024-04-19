@@ -1,16 +1,15 @@
 <!doctype html>
 <html lang="en">
-    
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Login Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link href="MyCss/assets/style.css" rel="stylesheet">
+    <script src="MyCss/assets/style.js"></script>
 </head>
 <?php
 include 'connection.php';
-
 if (isset($_POST['alogin'])) {
     $email = $_POST['email'];
     $password = $_POST['post'];
@@ -25,35 +24,42 @@ if (isset($_POST['alogin'])) {
     if ($flag) {
         $msg = "SELECT * FROM users WHERE email='$email'";
         $result = $conn->query($msg);
-        $details = $result->fetch_array();
-        $id = $details['id'];
-        $msg2 = 'SELECT * FROM user_details where user_id = '.$id;
-        $data1 = $conn->query($msg2);
-        if($result->num_rows == 0 || $password != $details['password']){
+        if (!$result->num_rows > 0) {
             echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
             <strong>Error!</strong> Invalid email or password
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>';
-        }
-        elseif ($data1->num_rows > 0){
-            session_start();
-            $user_name = $details['fname'];
-            $id = $details['id'];
-            $_SESSION['ltime'] = time();
-            $_SESSION['id'] = $id;
-            $_SESSION['email'] = $email;
-            $_SESSION['user_name'] = $user_name;
-            header("Location: index.php");
-
+            <button type="button" class="btn-close" data-bs-d
+            ismiss="alert" aria-label="Close"></button>
+            </div>';
         } else {
-            session_start();
-            $user_name = $details['fname'];
+            $details = $result->fetch_array();
             $id = $details['id'];
-            $_SESSION['id'] = $id;
-            $_SESSION['ltime'] = (int)time();
-            $_SESSION['email'] = $email;
-            $_SESSION['user_name'] = $user_name;
-            header("Location: completeProfile.php");
+            $msg2 = 'SELECT * FROM user_details where user_id = ' . $id;
+            $data1 = $conn->query($msg2);
+            if ($result->num_rows == 0 || $password != $details['password']) {
+                echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
+            <strong>Error!</strong> Invalid email or password
+            <button type="button" class="btn-close" data-bs-d
+            ismiss="alert" aria-label="Close"></button>
+          </div>';
+            } elseif ($data1->num_rows > 0) {
+                session_start();
+                $user_name = $details['fname'];
+                $id = $details['id'];
+                $_SESSION['ltime'] = time();
+                $_SESSION['id'] = $id;
+                $_SESSION['email'] = $email;
+                $_SESSION['user_name'] = $user_name;
+                header("Location: index.php");
+            } else {
+                session_start();
+                $user_name = $details['fname'];
+                $id = $details['id'];
+                $_SESSION['id'] = $id;
+                $_SESSION['ltime'] = (int)time();
+                $_SESSION['email'] = $email;
+                $_SESSION['user_name'] = $user_name;
+                header("Location: completeProfile.php");
+            }
         }
     } else {
         echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
@@ -61,15 +67,13 @@ if (isset($_POST['alogin'])) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     }
-}
-else if(isset($_GET['msg'])){
-    if($_GET['msg'] == 'NewUser'){
+} else if (isset($_GET['msg'])) {
+    if ($_GET['msg'] == 'NewUser') {
         echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
         <strong>Success!</strong> Account created successfully
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
-    }
-    elseif($_GET['msg'] == 'logout'){
+    } elseif ($_GET['msg'] == 'logout') {
         echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
         <strong>Success!</strong> Logged out successfully
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -79,7 +83,7 @@ else if(isset($_GET['msg'])){
 ?>
 
 <body>
-    <section class="vh-100 bg-image" style="background-image: url('images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg');">
+    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg');">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -110,7 +114,6 @@ else if(isset($_GET['msg'])){
             </div>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

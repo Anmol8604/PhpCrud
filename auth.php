@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if($_SESSION['ltime'] < time() - 300){
+if($_SESSION['ltime'] < time() - 1800){
     session_unset();
     session_destroy();
     header("Location: alogin.php");

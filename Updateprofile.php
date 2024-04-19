@@ -9,131 +9,6 @@ $details = $res1->fetch_array();
 $msg2 = 'SELECT * FROM users where id = ' . $id;
 $res2 = $conn->query($msg2);
 $user = $res2->fetch_array();
-
-if (isset($_POST['update'])) {
-    $flag = true;
-    // To concat all errors
-    $error = "";
-
-    // First Name Validation
-    $fname = trim($_POST['fname']);
-    if (empty($fname)) {
-        $flag = false;
-        $error .= "First Name is required<br>";
-    } else {
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $fname)) {
-            $error .= "Only letters and white space allowed in Name <br>";
-            $flag = false;
-        } elseif (strlen($fname) > 20 || strlen($fname) < 3) {
-            $error .= "Name must be between 3 to 20 characters <br>";
-            $flag = false;
-        }
-    }
-
-    // Last Name Validation
-    $lname = trim($_POST['lname']);
-    if (empty($lname)) {
-        $flag = false;
-        $error .= "Last Name is required<br>";
-    } else {
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $lname)) {
-            $error .= "Only letters and white space allowed inName <br>";
-            $flag = false;
-        } elseif (strlen($lname) > 20 || strlen($lname) < 3) {
-            $error .= "Name must be between 3 to 20 characters <br>";
-            $flag = false;
-        }
-    }
-
-    // Email Validation
-    $email = trim($_POST['email']);
-    if (empty($email)) {
-        $flag = false;
-        $error .= "Email is required<br>";
-    } else {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error .= "Invalid email format <br>";
-            $flag = false;
-        }
-    }
-
-    // Phone Validation
-    $phone = trim($_POST['phone']);
-    if (empty($phone)) {
-        $flag = false;
-        $error .= "Phone is required<br>";
-    } else if (!preg_match("/^[0-9]*$/", $phone)) {
-        $error .= "Only numbers allowed in Phone <br>";
-        $flag = false;
-    }
-
-    $image = $_FILES['image'];
-    $image_name = $image['name'];
-    // if (empty($image_name[0])) {
-    //     $flag = false;
-        // $error .= "Please upload an image" . $image_name[0];
-    // }
-    // City Validation
-    $city = trim($_POST['city']);
-    if (empty($city)) {
-        $flag = false;
-        $error .= "Please fill the city<br>";
-    }
-    // State Validation
-    $state = trim($_POST['state']);
-    if ($state == "Choose...") {
-        $flag = false;
-        $error .= "Please select a state<br>";
-    }
-    // Zip Validation
-    $zip = trim($_POST['zip']);
-    if (empty($zip)) {
-        $flag = false;
-        $error .= "Please fill the zip<br>";
-    } elseif (!preg_match("/^[0-9]{6}$/", $zip)) {
-        $flag = false;
-        $error .= "Zip should be of 6 digits<br>";
-    }
-    // Gender Validation 
-    if (!isset($_POST['gender'])) {
-        $flag = false;
-        $error .= "Please select your Gender<br>";
-    }
-    // Hobbies Validation
-    if (!isset($_POST['hobbies']) || count($_POST['hobbies']) != 2) {
-        $flag = false;
-        $error .= "Please select any two hobbies<br>";
-    }
-
-    if (!$flag) {
-        echo "<div style='z-index:1; max-width: 400px; min-width: 300px;' class='modal-dialog position-absolute top-0 end-0 me-4'>
-        <div class='modal-content'>
-            <div class='modal-header  d-flex justify-content-between'>
-                <h1 class='modal-title fs-5' id='exampleModalLabel'>Fix these Errors</h1>
-                <a href='asignup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>
-            </div>
-            <div class='modal-body'>
-                $error
-            </div>
-        </div>
-        </div>";
-    } else {
-        $hobbies = $_POST['hobbies'];
-        $msg = "UPDATE users SET fname = '$fname', lname = '$lname', phone = $phone, email = '$email' WHERE id = $id;";
-        $conn->query($msg);
-        $msg2 = "";
-        if(!empty($image_name[0])){
-            $msg2 = "UPDATE user_details SET image = '$image_name[0]', gender = '$_POST[gender]', hobbie1 = '$hobbies[0]', hobbie2 = '$hobbies[1]', state = '$state', city = '$city', zip = '$zip' WHERE user_id = $id;";
-        }
-        else{
-            $msg2 = "UPDATE user_details SET gender = '$_POST[gender]', hobbie1 = '$hobbies[0]', hobbie2 = '$hobbies[1]', state = '$state', city = '$city', zip = $zip WHERE user_id = $id;";
-        }
-        $conn->query($msg2);
-        header("Location: index.php?msg=Updated");
-
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -143,8 +18,9 @@ if (isset($_POST['update'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="MyCss/assets/style.css" rel="stylesheet">
+    <script src="MyCss/assets/style.js"></script>
+    <script src="MyCss/assets/jquery.js"></script>
 </head>
 
 <body>
@@ -152,6 +28,9 @@ if (isset($_POST['update'])) {
         <section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img7.webp');">
             <div class="mask d-flex align-items-center h-100 gradient-custom-3">
                 <div class="container h-100">
+                    <div id="modal">
+
+                    </div>
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col-12 col-md-9 col-lg-7 col-xl-8">
                             <div class="card" style="border-radius: 15px;">
@@ -165,25 +44,30 @@ if (isset($_POST['update'])) {
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example1cg">First Name</label>
                                                     <input type="text" id="form3Example1cg" value="<?php echo $user[2] ?>" class="form-control" name="fname" />
+                                                    <span id='fname'></span>
                                                 </div>
 
                                                 <div class="mb-2 ">
                                                     <label class="form-label" for="form3Example2cg">Last Name</label>
                                                     <input type="text" name="lname" id="form3Example2cg" value="<?php echo $user[3] ?>" class="form-control" />
+                                                    <span id='lname'></span>
                                                 </div>
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example4cg">Email</label>
                                                     <input type="mail" name="email" id="form3Example4cg" value="<?php echo $user[4] ?>" class="form-control" />
+                                                    <span id='email'></span>
                                                 </div>
 
                                                 <div class="mb-2">
                                                     <label class="form-label" for="form3Example4cdg">Phone No.</label>
                                                     <input type="tel" name="phone" id="form3Example4cdg" value="<?php echo $user[6] ?>" class="form-control" />
+                                                    <span id='phone'></span>
                                                 </div>
                                                 <!-- City -->
                                                 <div class="mb-2">
                                                     <label for="inputCity" class="form-label">City</label>
                                                     <input type="text" name="city" class="form-control" value="<?php echo $details[3] ?>" id="inputCity">
+                                                    <span id='city'></span>
                                                 </div>
 
                                                 <!-- State -->
@@ -193,34 +77,7 @@ if (isset($_POST['update'])) {
                                                         <option value="Choose...">Choose...</option>
                                                         <?php
                                                         $states = [
-                                                            "Arunachal Pradesh",
-                                                            "Andhra Pradesh",
-                                                            "Assam",
-                                                            "Bihar",
-                                                            "Chhattisgarh",
-                                                            "Goa",
-                                                            "Gujarat",
-                                                            "Haryana",
-                                                            "Himachal Pradesh",
-                                                            "Jharkhand",
-                                                            "Karnataka",
-                                                            "Kerala",
-                                                            "Madhya Pradesh",
-                                                            "Maharashtra",
-                                                            "Manipur",
-                                                            "Meghalaya",
-                                                            "Mizoram",
-                                                            "Nagaland",
-                                                            "Odisha",
-                                                            "Punjab",
-                                                            "Rajasthan",
-                                                            "Sikkim",
-                                                            "Tamil Nadu",
-                                                            "Telangana",
-                                                            "Tripura",
-                                                            "Uttarakhand",
-                                                            "Uttar Pradesh",
-                                                            "West Bengal"
+                                                            "Arunachal Pradesh", "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttarakhand", "Uttar Pradesh", "West Bengal"
                                                         ];
 
                                                         foreach ($states as $state) {
@@ -232,11 +89,13 @@ if (isset($_POST['update'])) {
                                                         }
                                                         ?>
                                                     </select>
+                                                    <span id='state'></span>
                                                 </div>
                                                 <!-- Zip -->
                                                 <div class="">
                                                     <label for="inputZip" class="form-label">Zip</label>
                                                     <input type="text" name="zip" class="form-control" value="<?php echo $details[5] ?>" id="inputZip">
+                                                    <span id='zip'></span>
                                                 </div>
 
                                             </div>
@@ -244,8 +103,9 @@ if (isset($_POST['update'])) {
                                             <div class="col-4 d-flex flex-column justify-content-between">
                                                 <div class="">
                                                     <label for="photo">Profile Image :</label><br>
-                                                    <input type="file" name="image[]" id="imageupdate">
-                                                    <img style="max-width:250px; max-height:250px;" src="images/<?php echo $details[2]; ?>" class="uImg" alt="<?php echo $details[2]; ?>">
+                                                    <input type="file" name="image" id="imageupdate">
+                                                    <img style="max-width:250px; max-height:250px;" src="MyCss/images/<?php echo $details[2]; ?>" class="uImg" alt="<?php echo $details[2]; ?>">
+                                                    <span id='image'></span>
                                                 </div>
                                                 <div class="">
                                                     <label class="form-label">Gender</label>
@@ -253,26 +113,21 @@ if (isset($_POST['update'])) {
                                                         <input class="form-check-input" type="radio" name="gender" id="male" value="male" <?php if ($details[6] == 'male') {
                                                                                                                                                 echo 'checked';
                                                                                                                                             } ?>>
-                                                        <label class="form-check-label" for="male">
-                                                            Male
-                                                        </label>
+                                                        <label class="form-check-label" for="male">Male</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" <?php if ($details[6] == 'female') {
                                                                                                             echo 'checked';
                                                                                                         } ?> name="gender" id="female" value="female">
-                                                        <label class="form-check-label" for="female">
-                                                            Female
-                                                        </label>
+                                                        <label class="form-check-label" for="female">Female</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="gender" id="other" value="other" <?php if ($details[6] == 'other') {
                                                                                                                                                 echo 'checked';
                                                                                                                                             } ?>>
-                                                        <label class="form-check-label" for="other">
-                                                            Other
-                                                        </label>
+                                                        <label class="form-check-label" for="other">Other</label>
                                                     </div>
+                                                    <span id='gender'></span>
                                                 </div>
                                                 <div class="">
                                                     <label class="form-label">Select Any two Hobbies</label>
@@ -280,43 +135,36 @@ if (isset($_POST['update'])) {
                                                         <input class="form-check-input" type="checkbox" name="hobbies[]" <?php if ($details[7] == 'reading' || $details[8] == 'reading') {
                                                                                                                                 echo 'checked';
                                                                                                                             } ?> id="reading" value="reading">
-                                                        <label class="form-check-label" for="reading">
-                                                            Reading
-                                                        </label>
+                                                        <label class="form-check-label" for="reading">Reading</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="hobbies[]" id="writing" value="writing" <?php if ($details[7] == 'writing' || $details[8] == 'writing') {
                                                                                                                                                             echo 'checked';
                                                                                                                                                         } ?>>
-                                                        <label class="form-check-label" for="writing">
-                                                            Writing
-                                                        </label>
+                                                        <label class="form-check-label" for="writing">Writing</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="hobbies[]" id="coding" value="coding" <?php if ($details[7] == 'coding' || $details[8] == 'coding') {
                                                                                                                                                         echo 'checked';
                                                                                                                                                     } ?>>
-                                                        <label class="form-check-label" for="coding">
-                                                            Coding
-                                                        </label>
+                                                        <label class="form-check-label" for="coding">Coding</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="hobbies[]" id="singing" value="singing" <?php if ($details[7] == 'singing' || $details[8] == 'singing') {
                                                                                                                                                             echo 'checked';
                                                                                                                                                         } ?>>
-                                                        <label class="form-check-label" for="singing">
-                                                            Singing
-                                                        </label>
+                                                        <label class="form-check-label" for="singing">Singing</label>
                                                     </div>
+                                                    <span id='hobbie'></span>
                                                 </div>
+                                            </div>
+                                            <div class="mt-4 mb-8 d-flex justify-content-around">
+                                                <button name='update' onclick="update1()" type="button" class="btn btn-primary">Update</button>
+                                                <a href="profile.php" class="btn btn-primary">Go Back</a>
                                             </div>
                                         </div>
                                         <!-- Submit button -->
                                     </form>
-                                    <div class="mt-4 mb-8 d-flex justify-content-around">
-                                        <button name='update' onclick="update(event)" type="submit" class="btn btn-primary">Update</button>
-                                        <a href="index.php" class="btn btn-primary"> Go Back</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -326,18 +174,6 @@ if (isset($_POST['update'])) {
         </section>
     </main>
     <script>
-        function update(event) {
-            event.preventDefault();
-            jQuery.ajax({
-                url: 'updateprofile.php',
-                type: 'post',
-                data: " ",
-                success: function() {
-                    console.log("data");
-                }
-            });
-        }
-
         document.getElementById('imageupdate').style.display = 'none';
         document.querySelector('.uImg').addEventListener('click', function() {
             document.getElementById('imageupdate').click();
@@ -350,9 +186,122 @@ if (isset($_POST['update'])) {
                 document.querySelector('.uImg').src = e.target.result;
             }
             reader.readAsDataURL(file);
-        })
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        });
+        
+        function update1() {
+            // preventDefault(); // Prevent the form from submitting normall
+            var formData = new FormData(document.querySelector('form')); // Create a new FormData object
+            // console.log(formData.getAll('hobbies'));
+
+            let flag = true;
+            let fname = formData.get('fname');
+            if (fname.length < 3 || fname.length > 20) {
+                
+                flag = false;
+                document.getElementById('fname').innerHTML = 'First Name must be between 3 to 20 characters';
+            } else if (fname == '') {
+                flag = false;
+                document.getElementById('fname').innerHTML = 'First Name is required';
+            } else if (!/^[a-zA-Z-' ]*$/.test(fname)) {
+                flag = false;
+                document.getElementById('fname').innerHTML = 'Only letters and spaces allowed in Name';
+            }else{
+                document.getElementById('fname').innerHTML.replace = '';
+            }
+            let lname = formData.get('lname');
+            if (lname == '') {
+                flag = false;
+                document.getElementById('lname').innerHTML = 'Last Name is required';
+            } else if (lname.length < 3 || lname.length > 20) {
+                flag = false;
+                document.getElementById('lname').innerHTML = 'Last Name must be between 3 to 20 characters';
+            } else if (!/^[a-zA-Z-' ]*$/.test(lname)) {
+                flag = false;
+                document.getElementById('lname').innerHTML = 'Only letters and spaces allowed in Name';
+            }
+            let email = formData.get('email');
+            if (email == '') {
+                flag = false;
+                document.getElementById('email').innerHTML = 'Email is required';
+            } else if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+                flag = false;
+                document.getElementById('email').innerHTML = 'Invalid Email format';
+            }
+            let phone = formData.get('phone');
+            if (phone == '') {
+                flag = false;
+                document.getElementById('phone').innerHTML = 'Phone is required';
+            } else if (!/^[0-9]*$/.test(phone)) {
+                flag = false;
+                document.getElementById('phone').innerHTML = 'Only numbers allowed in Phone';
+            }
+            let city = formData.get('city');
+            if (city == '') {
+                flag = false;
+                document.getElementById('city').innerHTML = 'Please fill the city';
+            }
+            let state = formData.get('state');
+            if (state == 'Choose...') {
+                flag = false;
+                document.getElementById('state').innerHTML = 'Please select a state';
+            }
+            let zip = formData.get('zip');
+            if (zip == '') {
+                flag = false;
+                document.getElementById('zip').innerHTML = 'Please fill the zip';
+            } else if (!/^[0-9]{6}$/.test(zip)) {
+                flag = false;
+                document.getElementById('zip').innerHTML = 'Zip should be of 6 digits';
+            }
+            let image = formData.get('image');
+            let photo = image['name'];
+            // console.log(image['name']);
+
+            
+            let gender = formData.get('gender');
+            if (gender == '') {
+                flag = false;
+                document.getElementById('gender').innerHTML = 'Please select your Gender';
+            }
+            let hobbies = formData.getAll('hobbies[]');
+            if (hobbies.length != 2) {
+                flag = false;
+                document.getElementById('hobbie').innerHTML = 'Please select any two hobbies';
+            }
+            // console.log(fname, lname, email, phone, city, state, zip, image, gender, hobbies, hobbies[1]);
+            if (flag) {
+                jQuery.ajax({
+                    url: 'action.php',
+                    type: 'POST',
+                    data: {
+                        methodName: 'update',
+                        fname: fname,
+                        lname: lname,
+                        email: email,
+                        phone: phone,
+                        city: city,
+                        state: state,
+                        zip: zip,
+                        photo: photo,
+                        gender: gender,
+                        hobbies: hobbies
+                    }, 
+                    success: function(res) {
+                        console.log(typeof res, res);
+                        if(res > 0){
+                            window.location.href = 'index.php';
+                        }
+                        else{
+                            document.getElementById('modal').innerHTML = res;
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+                    }
+                });
+            }
+        }
+        </script>
 </body>
 
 </html>

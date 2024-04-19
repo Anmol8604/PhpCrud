@@ -5,9 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin SignUp Page</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="MyCss/assets/style.css" rel="stylesheet">
+    <script src="MyCss/assets/style.js"></script>
 </head>
 
 <body>
@@ -116,7 +115,7 @@
             echo "<div class='modal-content'>";
             echo "    <div class='modal-header  d-flex justify-content-between'>";
             echo "        <h1 class='modal-title fs-5' id='exampleModalLabel'>Fix these Errors</h1>";
-            echo "        <a href='signup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>";
+            echo "        <a href='asignup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>";
             echo "    </div>";
             echo "    <div class='modal-body'>";
             echo "        $error";
@@ -125,13 +124,15 @@
             echo "</div>";
         } 
         else{
-            $sql = "INSERT INTO users (fname, lname, email, password, phone) VALUES ('$fname', '$lname', '$email', '$pass1', '$phone')";
+            $sql = "INSERT INTO users (user_type, fname, lname, email, password, phone) VALUES (1, '$fname', '$lname', '$email', '$pass1', '$phone')";
             $conn->query($sql);
+            $user = $conn->insert_id;
+            $sql = "INSERT INTO Role (user_id, user_Role) VALUES ($user, 'Admin')";
             header("Location: alogin.php?msg=NewUser");
         }
     }
     ?>
-    <section class="vh-100 bg-image" style="background-image: url('images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg'); height: 100%;">
+    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg'); height: 100%;">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -195,8 +196,5 @@
             </div>
         </div>
     </section>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>
-
 </html>

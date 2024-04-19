@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="MyCss/assets/style.css" rel="stylesheet">
+    <script src="MyCss/assets/style.js"></script>
 </head>
 
 <body>
@@ -57,29 +57,26 @@
             $error .= "Please select any two hobbies<br>";
         }
 
-        if (!$flag){
+        if (!$flag) {
             echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
             <strong>Error!</strong> ' . $error . '
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
-        }
-        else{
+        } else {
             $gender = $_POST['gender'];
             $hobbies = $_POST['hobbies'];
             $msg = "INSERT INTO user_details (user_id, image, city, state, zip, gender, hobbie1, hobbie2) VALUES ($id, '$image_name[0]', '$city', '$state', $zip, '$gender', '$hobbies[0]', '$hobbies[1]');";
-            $msg2 = 'SELECT * FROM user_details where user_id = '.$id;
+            $msg2 = 'SELECT * FROM user_details where user_id = ' . $id;
             $data1 = $conn->query($msg2);
-            if($data1->num_rows>0){
+            if ($data1->num_rows > 0) {
                 header("Location: updateprofile.php");
-            }
-            else if($conn->query($msg) === TRUE) {
+            } else if ($conn->query($msg) === TRUE) {
                 header("Location: index.php?msg=ProfileCompleted");
             }
         }
     }
-
     ?>
-
+    
     <main>
         <section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img7.webp');">
             <div class="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -224,4 +221,5 @@
         </section>
     </main>
 </body>
+
 </html>

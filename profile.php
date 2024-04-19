@@ -20,8 +20,7 @@ $user = $res2->fetch_array();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="MyCss/assets/style.css">
 </head>
 
 <body>
@@ -35,20 +34,20 @@ $user = $res2->fetch_array();
                                 <div class="card-body p-4">
                                     <h2 class='text-uppercase text-center mb-4'>Profile</h2>
                                     <table>
-                                        <tr class="py-2">
-                                            <td class="px-4 py-2">
-                                                <span for="name">Name</span>
-                                            </td>
-                                            <td class="px-4 py-2">
-                                                <span><?php echo $user[2] . " " . $user[3] ?></span>
-                                            </td>
-                                        </tr>
                                         <tr class="py-4">
                                             <td class="px-4 py-2">
                                                 <label for="name">Profile Picture</label>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <img style="max-height: 300px; max-width: 250px;" src="images/<?php echo $details[2] ?>" alt="profile picture">
+                                                <img style="max-height: 300px; max-width: 250px;" src="Mycss/images/<?php echo $details[2] ?>" alt="profile picture">
+                                            </td>
+                                        </tr>
+                                        <tr class="py-2">
+                                            <td class="px-4 py-2">
+                                                <span for="name">Name</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $user[2] . " " . $user[3] ?></strong></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -56,7 +55,7 @@ $user = $res2->fetch_array();
                                                 <span for="mail">Email</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $user[4] ?></span>
+                                                <span><strong><?php echo $user[4] ?></strong></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -64,7 +63,7 @@ $user = $res2->fetch_array();
                                                 <span for="phone">Phone No.</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $user[6] ?></span>
+                                                <span><strong><?php echo $user[6] ?></strong></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -72,7 +71,7 @@ $user = $res2->fetch_array();
                                                 <span for="gender">Gender</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $details[6] ?></span>
+                                                <span><strong><?php echo $details[6] ?></strong></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -80,7 +79,7 @@ $user = $res2->fetch_array();
                                                 <span for="hobbies">Hobbies</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $details[7] . ", " . $details[8] ?></span>
+                                                <span><strong><?php echo $details[7] . ", " . $details[8] ?></strong></span>
                                             </td>
                                         </tr>
                                         <tr class="py-4">
@@ -88,7 +87,7 @@ $user = $res2->fetch_array();
                                                 <span for="address">Address</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <span><?php echo $details[3] . ", " . $details[4] . ", " . $details[5] ?></span>
+                                                <span><strong><?php echo $details[3] . ", " . $details[4] . ", " . $details[5] ?></strong></span>
                                             </td>
                                         </tr>
                                     </table>
