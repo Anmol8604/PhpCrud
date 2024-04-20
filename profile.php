@@ -20,6 +20,7 @@ $user = $res2->fetch_array();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link href="MyCss/assets/font.css" rel="stylesheet">
     <link rel="stylesheet" href="MyCss/assets/style.css">
 </head>
 
@@ -92,9 +93,9 @@ $user = $res2->fetch_array();
                                         </tr>
                                     </table>
                                     <div class="mt-4 mb-8 d-flex justify-content-around">
-                                        <a href="index.php?msg=login" name='complete' class="btn btn-primary">Go Back</a>
-                                        <a href='Updateprofile.php' class="btn btn-primary">Update Profile</a>
-                                    </div>
+                                        <a href="index.php?msg=login" name='complete' class="btn btn-success">Go Back</a>
+                                        <a href='Updateprofile.php' class="btn btn-success">Update Profile</a>
+                                        </div>
                                 </div>
                             </div>
                         </div>

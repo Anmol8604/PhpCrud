@@ -132,7 +132,7 @@
         }
     }
     ?>
-    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg'); height: 100%;">
+    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/bg.jpg'); height: 100%;">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -182,7 +182,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4">Register</button>
+                                        <button style="background-color: #1cc88a;" name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success">Register</button>
                                     </div>
 
                                     <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="alogin.php" class="fw-bold text-body"><u>Login here</u></a></p>

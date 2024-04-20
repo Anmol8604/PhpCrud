@@ -83,7 +83,7 @@ if (isset($_POST['alogin'])) {
 ?>
 
 <body>
-    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/b54dbc74-4d6a-45e7-9f2f-f9df1e770ed4.jpg');">
+    <section class="vh-100 bg-image" style="background-image: url(MyCss/images/bg.jpg);">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -103,7 +103,7 @@ if (isset($_POST['alogin'])) {
                                     </div>
 
                                     <div class="d-flex mt-3 justify-content-center">
-                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init name="alogin" class="btn btn-success btn-block btn-lg gradient-custom-4" style="color: white;">Login</button>
+                                        <button style="background-color: #1cc88a;" type="submit" data-mdb-button-init data-mdb-ripple-init name="alogin" class="btn btn-success" style="color: white;">Login</button>
                                     </div>
                                     <p class="text-center text-muted mt-3 mb-0">Don't have an account? <a href="asignup.php" class="fw-bold text-body"><u>SignUp here</u></a></p>
                                 </form>

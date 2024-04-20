@@ -60,7 +60,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4">Register</button>
+                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success">Register</button>
                                     </div>
 
                                     <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="alogin.php" class="fw-bold text-body"><u>Login here</u></a></p>

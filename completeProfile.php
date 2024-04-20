@@ -209,7 +209,7 @@
                                         </div>
                                         <!-- Submit button -->
                                         <div class="mt-4 mb-8 d-flex justify-content-around">
-                                            <button name='complete' type="submit" class="btn btn-primary">Complete</button>
+                                            <button style="background-color: #1cc88a;" name='complete' type="submit" class="btn btn-success">Complete</button>
                                         </div>
                                     </form>
                                 </div>

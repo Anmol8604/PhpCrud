@@ -21,6 +21,7 @@ $user = $res2->fetch_array();
     <link href="MyCss/assets/style.css" rel="stylesheet">
     <script src="MyCss/assets/style.js"></script>
     <script src="MyCss/assets/jquery.js"></script>
+    <link href="MyCss/assets/font.css" rel="stylesheet">
 </head>
 
 <body>
@@ -100,11 +101,12 @@ $user = $res2->fetch_array();
 
                                             </div>
                                             <div class="col-1"></div>
+                                            <!-- Col 3 -->
                                             <div class="col-4 d-flex flex-column justify-content-between">
                                                 <div class="">
                                                     <label for="photo">Profile Image :</label><br>
                                                     <input type="file" name="image" id="imageupdate">
-                                                    <img style="max-width:250px; max-height:250px;" src="MyCss/images/<?php echo $details[2]; ?>" class="uImg" alt="<?php echo $details[2]; ?>">
+                                                    <img style="max-width:250px; max-height:250px; cursor: url(MyCss/Images/cursor.png),auto;" src="MyCss/images/<?php echo $details[2]; ?>" class="uImg" alt="<?php echo $details[2]; ?>">
                                                     <span id='image'></span>
                                                 </div>
                                                 <div class="">
@@ -158,9 +160,10 @@ $user = $res2->fetch_array();
                                                     <span id='hobbie'></span>
                                                 </div>
                                             </div>
+                                            <!-- Butttons -->
                                             <div class="mt-4 mb-8 d-flex justify-content-around">
-                                                <button name='update' onclick="update1()" type="button" class="btn btn-primary">Update</button>
-                                                <a href="profile.php" class="btn btn-primary">Go Back</a>
+                                                <button name='update' onclick="update1()" type="button" class="btn btn-success">Update</button>
+                                                <a  href="profile.php" class="btn btn-success">Go Back</a>
                                             </div>
                                         </div>
                                         <!-- Submit button -->
@@ -187,16 +190,14 @@ $user = $res2->fetch_array();
             }
             reader.readAsDataURL(file);
         });
-        
+
         function update1() {
-            // preventDefault(); // Prevent the form from submitting normall
-            var formData = new FormData(document.querySelector('form')); // Create a new FormData object
-            // console.log(formData.getAll('hobbies'));
+            var formData = new FormData(document.querySelector('form')); // Create a new FormData object 
 
             let flag = true;
             let fname = formData.get('fname');
             if (fname.length < 3 || fname.length > 20) {
-                
+
                 flag = false;
                 document.getElementById('fname').innerHTML = 'First Name must be between 3 to 20 characters';
             } else if (fname == '') {
@@ -205,7 +206,7 @@ $user = $res2->fetch_array();
             } else if (!/^[a-zA-Z-' ]*$/.test(fname)) {
                 flag = false;
                 document.getElementById('fname').innerHTML = 'Only letters and spaces allowed in Name';
-            }else{
+            } else {
                 document.getElementById('fname').innerHTML.replace = '';
             }
             let lname = formData.get('lname');
@@ -257,7 +258,7 @@ $user = $res2->fetch_array();
             let photo = image['name'];
             // console.log(image['name']);
 
-            
+
             let gender = formData.get('gender');
             if (gender == '') {
                 flag = false;
@@ -285,13 +286,11 @@ $user = $res2->fetch_array();
                         photo: photo,
                         gender: gender,
                         hobbies: hobbies
-                    }, 
+                    },
                     success: function(res) {
-                        console.log(typeof res, res);
-                        if(res > 0){
-                            window.location.href = 'index.php';
-                        }
-                        else{
+                        if (res > 0) {
+                            window.location.href = 'profile.php';
+                        } else {
                             document.getElementById('modal').innerHTML = res;
                         }
                     },
@@ -301,7 +300,7 @@ $user = $res2->fetch_array();
                 });
             }
         }
-        </script>
+    </script>
 </body>
 
 </html>
