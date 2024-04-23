@@ -25,7 +25,7 @@ if (isset($_POST['alogin'])) {
         $msg = "SELECT * FROM users WHERE email='$email'";
         $result = $conn->query($msg);
         if (!$result->num_rows > 0) {
-            echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
+            echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
             <strong>Error!</strong> Invalid email or password
             <button type="button" class="btn-close" data-bs-d
             ismiss="alert" aria-label="Close"></button>
@@ -36,7 +36,7 @@ if (isset($_POST['alogin'])) {
             $msg2 = 'SELECT * FROM user_details where user_id = ' . $id;
             $data1 = $conn->query($msg2);
             if ($result->num_rows == 0 || $password != $details['password']) {
-                echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
+                echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
             <strong>Error!</strong> Invalid email or password
             <button type="button" class="btn-close" data-bs-d
             ismiss="alert" aria-label="Close"></button>
@@ -62,19 +62,19 @@ if (isset($_POST['alogin'])) {
             }
         }
     } else {
-        echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
+        echo '<div  id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
         <strong>Error!</strong> ' . $error . '
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     }
 } else if (isset($_GET['msg'])) {
     if ($_GET['msg'] == 'NewUser') {
-        echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
+        echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
         <strong>Success!</strong> Account created successfully
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     } elseif ($_GET['msg'] == 'logout') {
-        echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
+        echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
         <strong>Success!</strong> Logged out successfully
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
@@ -114,6 +114,11 @@ if (isset($_POST['alogin'])) {
             </div>
         </div>
     </section>
+    <script>
+        setTimeout(() => {
+            document.getElementById('popUp').style.display = 'none';
+        }, 3000);
+    </script>
 </body>
 
 </html>

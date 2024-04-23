@@ -1,36 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
-
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="MyCss/assets/style.css">
-    <link href="MyCss/assets/font.css" rel="stylesheet">
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="MyCss/assets/style.js"></script>
-
-
-</head>
-
 <?php
+
+// include 'session.php';
 include 'connection.php';
 include 'auth.php';
-$id = $_SESSION['id'];
-$email = $_SESSION['email'];
 $user_name = $_SESSION['user_name'];
+$id = $_SESSION['id'];
 $msg1 = 'SELECT * FROM user_details where user_id = ' . $id;
 $res1 = $conn->query($msg1);
 $details = $res1->fetch_array();
 $msg2 = 'SELECT * FROM users where id = ' . $id;
 $res2 = $conn->query($msg2);
 $user = $res2->fetch_array();
-
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="MyCss/assets/style.css">
+    <link href="MyCss/assets/font.css" rel="stylesheet">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="MyCss/assets/style.js"></script>
+</head>
 
 <body id="page-top">
 
@@ -41,7 +36,7 @@ $user = $res2->fetch_array();
         <ul style="background-color: #1cc88a;" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -53,7 +48,7 @@ $user = $res2->fetch_array();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -111,7 +106,7 @@ $user = $res2->fetch_array();
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $user[2] ?></span>
                                 <img class="img-profile rounded-circle" src="MyCss/images/<?php echo $details[2] ?>">
                             </a>
@@ -139,86 +134,83 @@ $user = $res2->fetch_array();
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Profile</h1>
                     </div>
-                    <div class="row">
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Vendors</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
+                    <!-- Content Row -->
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 ">
+                            <div class="card d-flex">
+                                <div class="card-body p-4 d-flex justify-content-around">
+                                    <table class="col-5">
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <label for="name">Profile Picture</label>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <img style="max-height: 300px; max-width: 250px;" src="Mycss/images/<?php echo $details[2] ?>" alt="profile picture">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <table class="col-5">
+                                        <tr class="py-2">
+                                            <td class="px-4 py-2">
+                                                <span for="name">Name</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $user[2] . " " . $user[3] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <span for="mail">Email</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $user[4] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <span for="phone">Phone No.</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $user[6] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <span for="gender">Gender</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $details[6] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <span for="hobbies">Hobbies</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $details[7] . ", " . $details[8] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-4">
+                                            <td class="px-4 py-2">
+                                                <span for="address">Address</span>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <span><strong><?php echo $details[3] . ", " . $details[4] . ", " . $details[5] ?></strong></span>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Products</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Category
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">1</div>
-                                                </div>
-                                                <!-- <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 10%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div> -->
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
+                                <div class="p-4 d-flex justify-content-around">
+                                    <a href='Updateprofile.php' class="btn btn-success">Update Profile</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="d-flex">
-                        <div class="w-3 pl-2 pr-0 mb-2">
-                            <button type="button" class="btn btn-outline-success">Create Vendor</button>
-                        </div>
-                        <div class="w-3 pl-2 pr-0 mb-2">
-                            <button type="button" class="btn btn-outline-warning">Update Vendor</button>
-                        </div>
-                        <div class="w-3 pl-2 pr-0 mb-2">
-                            <button type="button" class="btn btn-outline-danger">Delete Vendor</button>
-                        </div>
-                    </div> -->
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
@@ -261,16 +253,6 @@ $user = $res2->fetch_array();
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
 </body>
 
 </html>

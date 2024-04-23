@@ -11,10 +11,10 @@
 
 <body>
     <?php
-    include 'session.php';
+    include 'auth.php';
     if (isset($_POST['complete'])) {
         include 'connection.php';
-
+        $id = $_SESSION['id'];
         $flag = true;
         $error = "<br>";
 
@@ -58,7 +58,7 @@
         }
 
         if (!$flag) {
-            echo '<div class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
+            echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-danger fade show" role="alert">
             <strong>Error!</strong> ' . $error . '
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
@@ -76,7 +76,7 @@
         }
     }
     ?>
-    
+
     <main>
         <section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img7.webp');">
             <div class="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -94,6 +94,8 @@
                                                 <div class="mb-2">
                                                     <label for="formFile" class="form-label">Upload profile picture</label>
                                                     <input class="form-control" name="image[]" type="file" id="formFile">
+                                                    <img style="max-width:250px; max-height:150px; cursor: url(MyCss/Images/cursor.png),auto; display: none;"class="uImg" alt="img">
+                                                    <span id='image'></span>
                                                 </div>
                                                 <!-- City -->
                                                 <div class="mb-2">
@@ -220,6 +222,25 @@
             </div>
         </section>
     </main>
+    <script>
+        document.querySelector('.uImg').addEventListener('click', function() {
+            document.getElementById('formFile').click();
+        });
+        document.getElementById('formFile').addEventListener('change', function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('#formFile').style.display = 'none';
+                document.querySelector('.uImg').style.display = 'block';
+                document.querySelector('.uImg').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+        
+        setTimeout(() => {
+            document.getElementById('popUp').style.display = 'none';
+        }, 3000);
+    </script>
 </body>
 
 </html>

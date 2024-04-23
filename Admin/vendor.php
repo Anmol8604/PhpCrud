@@ -16,8 +16,8 @@
 </head>
 
 <?php
-include 'connection.php';
 include 'auth.php';
+include 'connection.php';
 $id = $_SESSION['id'];
 $email = $_SESSION['email'];
 $user_name = $_SESSION['user_name'];
@@ -27,7 +27,9 @@ $details = $res1->fetch_array();
 $msg2 = 'SELECT * FROM users where id = ' . $id;
 $res2 = $conn->query($msg2);
 $user = $res2->fetch_array();
-
+$Countryquery = 'SELECT id, name FROM `countries`';
+$selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2';
+$data1 = $conn->query($selectVendor);
 ?>
 
 <body id="page-top">
@@ -39,7 +41,7 @@ $user = $res2->fetch_array();
         <ul style="background-color: #1cc88a;" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -51,7 +53,7 @@ $user = $res2->fetch_array();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -147,7 +149,7 @@ $user = $res2->fetch_array();
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Vendors</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $data1->num_rows ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -156,7 +158,17 @@ $user = $res2->fetch_array();
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="d-flex">
+                            <div class="pe-3 d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" id="searchVen" class="form-control bg-outline-success border-1 border-success small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div>
                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#AddVendor">+ Create Vendor</button>
                             </div>
@@ -165,35 +177,57 @@ $user = $res2->fetch_array();
 
                     <!-- Vendor Table -->
                     <div class="mb-4">
-                        <table class="table ">
-                            <thead class="table-success">
-                                <tr>
+                        <table class="table table-success table-striped">
+                            <thead class="table-light">
+                                <tr class="table-active">
                                     <th scope="col">Id</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Zip</th>
                                     <th scope="col">Business Type</th>
                                     <th scope="col">Business Name</th>
-                                    <th scope="col">Type</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td scope="col">Name</td>
-                                    <td scope="col">Email</td>
-                                    <td scope="col">Phone</td>
-                                    <td scope="col">Address</td>
-                                    <td scope="col">Zip</td>
-                                    <td scope="col">Business Type</td>
-                                    <td scope="col">Business Name</td>
-                                    <td scope="col">Type</td>
-                                    <td scope="col">Actions</td>
+                            <tbody id="venTable">
+                                <?php
+                                $i = 0;
+                                $selectVendor .= ' LIMIT 5';
+                                $data2 = $conn->query($selectVendor);
+                                while ($res = $data2->fetch_array()) {
+                                    echo "<tr'>";
+                                    echo "<td class='table-active'>" . ++$i . "</td>";
+                                    echo "<td>" . $res['fname'] . " " . $res['lname'] . "</td>";
+                                    echo "<td>" . $res['email'] . "</td>";
+                                    echo "<td>" . $res['Btype'] . "</td>";
+                                    echo "<td>" . $res['Bname'] . "</td>";
+                                    echo '<td>
+                                        <a href="vendor/view?' . $res['email'] . '"><img src="MyCss/images/eye.png" alt=""></a>
+                                        <a href="vendor/edit?' . $res['email'] . '"><img src="MyCss/images/cursor.png" alt=""></a>
+                                        <a href="vendor/delete?' . $res['email'] . '"><img src="MyCss/images/delete.png" alt=""></a>
+                                    </td>';
+                                    echo "</tr>";
+                                }
+                                ?>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <nav aria-label="">
+                                            <ul class="pagination d-flex justify-content-center">
+                                                <?php
+                                                $total_pages = $data1->num_rows;
+                                                $total_pages = ceil($total_pages / 5);
+
+                                                for ($i = 1; $i <= $total_pages; $i++) {
+                                                    echo "<li class='page-item'><a class='page-link' id='pagination1'>" . $i . "</a></li>";
+                                                }
+                                                ?>
+                                            </ul>
+                                        </nav>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -285,10 +319,10 @@ $user = $res2->fetch_array();
                                     <select id="inputCountry" name="Country" class="form-select">
                                         <option value="Choose..." selected>Choose...</option>
                                         <?php
-                                        $countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
-
+                                        $res = $pubConn->query($Countryquery);
+                                        $countries = $res->fetch_all();
                                         foreach ($countries as $country) {
-                                            echo "<option value=\"$country\">$country</option>";
+                                            echo "<option value=\"$country[0]\">$country[1]</option>";
                                         }
                                         ?>
                                     </select>
@@ -297,51 +331,15 @@ $user = $res2->fetch_array();
                                 <div data-mdb-input-init class="form-outline ms-1 mb-1 w-50">
                                     <label for="inputState" class="form-label">State</label>
                                     <select id="inputState" name="state" class="form-select">
-                                        <option value="Choose..." selected>Choose...</option>
-                                        <?php
-                                        $states = [
-                                            "Arunachal Pradesh",
-                                            "Andhra Pradesh",
-                                            "Assam",
-                                            "Bihar",
-                                            "Chhattisgarh",
-                                            "Goa",
-                                            "Gujarat",
-                                            "Haryana",
-                                            "Himachal Pradesh",
-                                            "Jharkhand",
-                                            "Karnataka",
-                                            "Kerala",
-                                            "Madhya Pradesh",
-                                            "Maharashtra",
-                                            "Manipur",
-                                            "Meghalaya",
-                                            "Mizoram",
-                                            "Nagaland",
-                                            "Odisha",
-                                            "Punjab",
-                                            "Rajasthan",
-                                            "Sikkim",
-                                            "Tamil Nadu",
-                                            "Telangana",
-                                            "Tripura",
-                                            "Uttarakhand",
-                                            "Uttar Pradesh",
-                                            "West Bengal"
-                                        ];
-
-                                        foreach ($states as $state) {
-                                            echo "<option value=\"$state\">$state</option>";
-                                        }
-                                        ?>
                                     </select>
                                     <span id="state"></span>
                                 </div>
                             </div>
                             <div class="d-flex">
                                 <div data-mdb-input-init class="form-outline me-1 mb-1 w-50">
-                                    <label class="form-label" for="Example4cg">City</label>
-                                    <input type="text" name="city" id="Example4cg" class="form-control form-control" />
+                                    <label class="form-label" for="inputCity">City</label>
+                                    <select id="inputCity" name="City" class="form-select">
+                                    </select>
                                     <span id='city'></span>
                                 </div>
                                 <div data-mdb-input-init class="form-outline ms-1 mb-1 w-50">
@@ -375,22 +373,6 @@ $user = $res2->fetch_array();
                                     <span id="Bname"></span>
                                 </div>
                             </div>
-                            <div class="d-flex">
-                                <div data-mdb-input-init class="form-outline mb-1 w-50">
-                                    <label for="inputVT" class="form-label">Vendor Type</label>
-                                    <select id="inputVT" name="vendorT" class="form-select">
-                                        <option value="Choose..." selected>Choose...</option>
-                                        <?php
-                                        $vType = ["Retailers", "Wholesalers", "Distributors", "Manufacturers", "Suppliers"];
-
-                                        foreach ($vType as $v) {
-                                            echo "<option value=\"$v\">$v</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <span id="vendorT"></span>
-                                </div>
-                            </div>
                             <!-- Submit button -->
                             <div class="mt-4 mb-8 d-flex justify-content-around">
                                 <button name='vendorAdd' onclick="addVendor()" type="button" class="btn btn-success">Add Vendor</button>
@@ -406,10 +388,104 @@ $user = $res2->fetch_array();
 
 
     <script>
+        document.querySelectorAll('.page-link').forEach(item => {
+            item.addEventListener('click', event => {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: 'action.php',
+                    data: {
+                        methodName: 'pagination',
+                        page: item.innerText
+                    },
+                    success: function(res) {
+                        document.getElementById('venTable').innerHTML = res;
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+                    }
+                });
+            })
+        });
+
+        document.getElementById('searchVen').addEventListener('change', function() {
+            var a = document.getElementById('searchVen').value;
+            jQuery.ajax({
+                type: 'POST',
+                url: 'action.php',
+                data: {
+                    methodName: 'searchVen',
+                    search: a
+                },
+                success: function(res) {
+                    document.getElementById('venTable').innerHTML = res;
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+                }
+
+            });
+        });
+
+        document.getElementById('inputCountry').addEventListener('change', function() {
+            document.getElementById('state').innerHTML = '';
+            document.getElementById('city').innerHTML = '';
+            document.getElementById('inputState').innerHTML = "<option value='Choose...' selected>Choose...</option>";
+            document.getElementById('inputCity').innerHTML = "<option value='Choose...' selected>Choose...</option>";
+            if (document.getElementById('inputCountry').value == 'Choose...') {
+                document.getElementById('Country').innerHTML = 'Country is required';
+            } else {
+                var a = document.getElementById('inputCountry').value;
+                document.getElementById('Country').innerHTML = '';
+                jQuery.ajax({
+                    type: 'POST',
+                    url: 'action.php',
+                    data: {
+                        methodName: 'state',
+                        countryVal: a
+                    },
+                    success: function(res) {
+                        var x = "<option value='Choose...' selected>Choose...</option>" + res;
+                        document.getElementById('inputState').innerHTML = x;
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+                    }
+                });
+            }
+        });
+
+        document.getElementById('inputState').addEventListener('change', function() {
+            var a = document.getElementById('inputCountry').value;
+            var b = document.getElementById('inputState').value;
+            document.getElementById('city').innerHTML = '';
+            if (a == 'Choose...') {
+                document.getElementById('state').innerHTML = 'Country is required';
+            } else if (b == 'Choose...') {
+                document.getElementById('state').innerHTML = 'State is required';
+            } else {
+                document.getElementById('Country').innerHTML = '';
+                jQuery.ajax({
+                    type: 'POST',
+                    url: 'action.php',
+                    data: {
+                        methodName: 'city',
+                        stateVal: b
+                    },
+                    success: function(res) {
+                        var x = "<option value='Choose...' selected>Choose...</option>" + res;
+                        document.getElementById('inputCity').innerHTML = x;
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+                    }
+                });
+            }
+        });
+
 
         function addVendor() {
             var formData = new FormData(document.getElementById('venForm')); // Create a new FormData object
-            console.log(formData);
+            // console.log(formData);
             let flag = true;
             // First Name
             let fname = formData.get('fname');
@@ -448,7 +524,7 @@ $user = $res2->fetch_array();
             } else if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
                 flag = false;
                 document.getElementById('email').innerHTML = 'Invalid Email format';
-            }else {
+            } else {
                 document.getElementById('email').innerHTML = "";
             }
             // Phone
@@ -459,12 +535,11 @@ $user = $res2->fetch_array();
             } else if (!/^[0-9]*$/.test(phone)) {
                 flag = false;
                 document.getElementById('phone').innerHTML = 'Only numbers allowed in Phone';
-            }
-            else {
+            } else {
                 document.getElementById('phone').innerHTML = "";
             }
             // Country
-            let country = formData.get('Country');
+            let country = document.getElementById('inputCountry').options[document.getElementById('inputCountry').selectedIndex].text;
             if (country == null || country == 'Choose...') {
                 flag = false;
                 document.getElementById('Country').innerHTML = 'Country is required';
@@ -472,7 +547,7 @@ $user = $res2->fetch_array();
                 document.getElementById('Country').innerHTML = "";
             }
             // State
-            let state = formData.get('state');
+            let state = document.getElementById('inputState').options[document.getElementById('inputState').selectedIndex].text;
             if (state == null || state == 'Choose...') {
                 flag = false;
                 document.getElementById('state').innerHTML = 'State is required';
@@ -480,7 +555,7 @@ $user = $res2->fetch_array();
                 document.getElementById('state').innerHTML = "";
             }
             // City
-            let city = formData.get('city');
+            let city = document.getElementById('inputCity').options[document.getElementById('inputCity').selectedIndex].text;
             if (city == null || city == '') {
                 flag = false;
                 document.getElementById('city').innerHTML = 'City is required';
@@ -514,16 +589,6 @@ $user = $res2->fetch_array();
             } else {
                 document.getElementById('Bname').innerHTML = "";
             }
-            // Vendor Type
-            let vendorT = formData.get('vendorT');
-            if (vendorT == null || vendorT == 'Choose...') {
-                flag = false;
-                document.getElementById('vendorT').innerHTML = 'Vendor Type is required';
-            } else {
-                document.getElementById('vendorT').innerHTML = "";
-            }
-
-            console.log(fname, lname, email, phone, country, state, city, zip, businessT, Bname, vendorT, flag);
             if (flag) {
                 jQuery.ajax({
                     url: 'action.php',
@@ -539,10 +604,10 @@ $user = $res2->fetch_array();
                         city: city,
                         zip: zip,
                         businessT: businessT,
-                        Bname: Bname,
-                        vendorT: vendorT
+                        Bname: Bname
                     },
-                    success: function(res) {    
+                    success: function(res) {
+                        console.log(fname, lname, email, phone, country, state, city, zip, businessT, Bname, res);
                         window.location.href = 'vendor.php';
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -552,7 +617,6 @@ $user = $res2->fetch_array();
             }
         }
     </script>
-
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

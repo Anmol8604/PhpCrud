@@ -127,7 +127,6 @@
             $sql = "INSERT INTO users (user_type, fname, lname, email, password, phone) VALUES (1, '$fname', '$lname', '$email', '$pass1', '$phone')";
             $conn->query($sql);
             $user = $conn->insert_id;
-            $sql = "INSERT INTO Role (user_id, user_Role) VALUES ($user, 'Admin')";
             header("Location: alogin.php?msg=NewUser");
         }
     }
@@ -164,7 +163,7 @@
                                         </div>
                                         
                                         <div data-mdb-input-init class="form-outline ms-1 mb-2 w-50">
-                                            <label class="form-label" for="form3Example4cdg">Repeat your password</label>
+                                            <label class="form-label" for="form3Example4cdg">Confirm password</label>
                                             <input type="password" name="password2" id="form3Example4cdg" class="form-control form-control-lg" />
                                         </div>
                                     </div>
