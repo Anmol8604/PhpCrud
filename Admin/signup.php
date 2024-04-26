@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin SignUp Page</title>
-    <link href="MyCss/assets/style.css" rel="stylesheet">
-    <script src="MyCss/assets/style.js"></script>
+    <link href="../MyCss/assets/style.css" rel="stylesheet">
+    <script src="../MyCss/assets/style.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
         if (empty($fname)) {
             $flag = false;
             $error .= "First Name is required<br>";
-        }else {
+        } else {
             if (!preg_match("/^[a-zA-Z-' ]*$/", $fname)) {
                 $error .= "Only letters and white space allowed in Name <br>";
                 $flag = false;
@@ -71,7 +71,7 @@
 
         // Confirm Password Validation
         $pass2 = trim($_POST['password2']);
-        if($pass1 != $pass2){
+        if ($pass1 != $pass2) {
             $flag = false;
             $error .= "Passwords do not match<br>";
         }
@@ -82,8 +82,13 @@
             $flag = false;
             $error .= "Email is required<br>";
         } else {
+            $query = "SELECT * FROM users WHERE email = '$email'";
+            $result = $conn->query($query);
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error .= "Invalid email format <br>";
+                $flag = false;
+            } else if ($result->num_rows > 0) {
+                $error .= "Email already exists <br>";
                 $flag = false;
             }
         }
@@ -93,7 +98,7 @@
         if (empty($phone)) {
             $flag = false;
             $error .= "Phone is required<br>";
-        } else if(!preg_match("/^[0-9]*$/", $phone)) {
+        } else if (!preg_match("/^[0-9]*$/", $phone)) {
             $error .= "Only numbers allowed in Phone <br>";
             $flag = false;
         }
@@ -102,36 +107,39 @@
         if (!isset($_POST['terms'])) {
             $flag = false;
             $error .= "Please accept terms and conditions";
-        }else{
-            $sql = "Select * from users where email = '$email'";
-            $data1 = $conn->query($sql);
-            if($data1->num_rows>0){
-                $flag = false;
-                $error .= "Email already exists";
-            }
-        }   
+        }
         if (!$flag) {
             echo "<div style='z-index:1; max-width: 400px; min-width: 300px;' class='modal-dialog position-absolute top-0 end-0 me-4'>";
             echo "<div class='modal-content'>";
             echo "    <div class='modal-header  d-flex justify-content-between'>";
             echo "        <h1 class='modal-title fs-5' id='exampleModalLabel'>Fix these Errors</h1>";
-            echo "        <a href='asignup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>";
+            echo "        <a href='signup.php' class='btn-close' data-mdb-dismiss='modal' aria-label='Close'></a>";
             echo "    </div>";
             echo "    <div class='modal-body'>";
             echo "        $error";
             echo "    </div>";
             echo "</div>";
             echo "</div>";
-        } 
-        else{
-            $sql = "INSERT INTO users (user_type, fname, lname, email, password, phone) VALUES (1, '$fname', '$lname', '$email', '$pass1', '$phone')";
+        } else {
+            $pass = md5($pass1);
+            $currentTime = date('Y-m-d H:i:s');
+            $sql = "INSERT INTO users (user_type, fname, lname, email, password, phone, createdAt, updatedAt, status) VALUES (1, '$fname', '$lname', '$email', '$pass', '$phone', '$currentTime', '$currentTime', 0)";
             $conn->query($sql);
             $user = $conn->insert_id;
-            header("Location: alogin.php?msg=NewUser");
+
+            $link = "http://project2.test/admin/completeProfile.php?user=$email";
+            session_start();
+            $_SESSION['link'] = $link;
+            $_SESSION['email'] = $email;
+            $_SESSION['user'] = $fname . " " . $lname;
+            include 'signupMail.php';
+            session_unset();
+            session_destroy();
+            header("Location: login.php?msg=NewUser");
         }
     }
     ?>
-    <section class="vh-100 bg-image" style="background-image: url('MyCss/images/bg.jpg'); height: 100%;">
+    <section class="vh-100 bg-image" style="background-image: url('../MyCss/images/bg.jpg'); height: 100%;">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -145,7 +153,7 @@
                                             <label class="form-label" for="form3Example1cg">First Name</label>
                                             <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="fname" />
                                         </div>
-                                        
+
                                         <div data-mdb-input-init class="form-outline mb-2 ms-1 w-50">
                                             <label class="form-label" for="form3Example2cg">Last Name</label>
                                             <input type="text" name="lname" id="form3Example2cg" class="form-control form-control-lg" />
@@ -161,7 +169,7 @@
                                             <label class="form-label" for="form3Example4cg">Password</label>
                                             <input type="password" name="password" id="form3Example4cg" class="form-control form-control-lg" />
                                         </div>
-                                        
+
                                         <div data-mdb-input-init class="form-outline ms-1 mb-2 w-50">
                                             <label class="form-label" for="form3Example4cdg">Confirm password</label>
                                             <input type="password" name="password2" id="form3Example4cdg" class="form-control form-control-lg" />
@@ -181,10 +189,10 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <button style="background-color: #1cc88a;" name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success">Register</button>
+                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary">Register</button>
                                     </div>
 
-                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="alogin.php" class="fw-bold text-body"><u>Login here</u></a></p>
+                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="login.php" class="fw-bold text-body"><u>Login here</u></a></p>
 
                                 </form>
 
@@ -196,4 +204,5 @@
         </div>
     </section>
 </body>
+
 </html>

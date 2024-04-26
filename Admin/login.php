@@ -5,14 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Login Page</title>
-    <link href="MyCss/assets/style.css" rel="stylesheet">
-    <script src="MyCss/assets/style.js"></script>
+    <link href="../MyCss/assets/style.css" rel="stylesheet">
+    <script src="../MyCss/assets/style.js"></script>
 </head>
 <?php
 include 'connection.php';
-if (isset($_POST['alogin'])) {
+if (isset($_POST['login'])) {
     $email = $_POST['email'];
-    $password = $_POST['post'];
+    $password = md5($_POST['post']);
     $flag = true;
     $error = "";
 
@@ -51,14 +51,15 @@ if (isset($_POST['alogin'])) {
                 $_SESSION['user_name'] = $user_name;
                 header("Location: index.php");
             } else {
-                session_start();
-                $user_name = $details['fname'];
-                $id = $details['id'];
-                $_SESSION['id'] = $id;
-                $_SESSION['ltime'] = (int)time();
-                $_SESSION['email'] = $email;
-                $_SESSION['user_name'] = $user_name;
-                header("Location: completeProfile.php");
+                $query = "SELECT * FROM users WHERE email='$email'";
+                $result = $conn->query($query);
+                $details = $result->fetch_array();
+                if($details['status'] == 0){
+                    echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-info fade show" role="alert">
+                    <strong>Info!</strong> Please verify your email And Complete your profile
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+                }
             }
         }
     } else {
@@ -70,12 +71,30 @@ if (isset($_POST['alogin'])) {
 } else if (isset($_GET['msg'])) {
     if ($_GET['msg'] == 'NewUser') {
         echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
-        <strong>Success!</strong> Account created successfully
+        <strong>Success!</strong> Account created secondaryfully
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     } elseif ($_GET['msg'] == 'logout') {
         echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
-        <strong>Success!</strong> Logged out successfully
+        <strong>Success!</strong> Logged out secondaryfully
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>';
+    }
+    elseif ($_GET['msg'] == 'profileCompleted') {
+        echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
+        <strong>Success!</strong> Profile Completed Successfully, Login to continue
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>';
+    }
+    elseif ($_GET['msg'] == 'linkSent'){
+        echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
+        <strong>Success!</strong> A password reset link has been sent to your email
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>';
+    }
+    elseif ($_GET['msg'] == 'reset'){
+        echo '<div id="popUp" class="alert position-absolute top-0 end-0 mt-4 me-4 alert-dismissible alert-success fade show" role="alert">
+        <strong>Success!</strong> Password reset successfully! Login to continue
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     }
@@ -83,7 +102,7 @@ if (isset($_POST['alogin'])) {
 ?>
 
 <body>
-    <section class="vh-100 bg-image" style="background-image: url(MyCss/images/bg.jpg);">
+    <section class="vh-100 bg-image" style="background-image: url(../MyCss/images/bg.jpg);">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
@@ -102,10 +121,12 @@ if (isset($_POST['alogin'])) {
                                         <input type="password" name='post' id="form3Example4cg" class="form-control form-control-lg" />
                                     </div>
 
+                                    <p class="text-end text-muted mb-0"><a href="forgotPassword.php" class="fw-bold text-body">Forgot Password?</a></p>
                                     <div class="d-flex mt-3 justify-content-center">
-                                        <button style="background-color: #1cc88a;" type="submit" data-mdb-button-init data-mdb-ripple-init name="alogin" class="btn btn-success" style="color: white;">Login</button>
+                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init name="login" class="btn btn-secondary" style="color: white;">Login</button>
                                     </div>
-                                    <p class="text-center text-muted mt-3 mb-0">Don't have an account? <a href="asignup.php" class="fw-bold text-body"><u>SignUp here</u></a></p>
+                                    <p class="text-center text-muted mt-3 mb-0">Don't have an account? <a href="signup.php" class="fw-bold text-body"><u>SignUp here</u></a></p>
+                                    </div>
                                 </form>
                             </div>
                         </div>

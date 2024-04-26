@@ -5,18 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link href="MyCss/assets/style.css" rel="stylesheet">
-    <script src="MyCss/assets/style.js"></script>
+    <link href="../MyCss/assets/style.css" rel="stylesheet">
+    <script src="../MyCss/assets/style.js"></script>
 </head>
 
 <body>
     <?php
-    include 'auth.php';
+    if (isset($_GET['user'])) {
+        $user_email = $_GET['user'];
+        include 'connection.php';
+        $query = "SELECT status FROM users WHERE email = '" . $user_email . "'";
+        $data = $conn->query($query);
+        if($data->num_rows == 0){
+            echo 'Invalid Link';
+            exit();
+        }
+        $val = $data->fetch_array();
+        if ($val['status'] == 1) {
+            echo "Link has been expired";
+            return;
+        }
+    }
+
     if (isset($_POST['complete'])) {
         include 'connection.php';
-        $id = $_SESSION['id'];
         $flag = true;
         $error = "<br>";
+
+        if (!isset($user_email)) {
+            $flag = false;
+            $error .= "Wrong Link<br>";
+        }
 
         // Image Validation
         $image = $_FILES['image'];
@@ -63,16 +82,16 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
         } else {
+            $query = "SELECT id FROM users WHERE email = '" . $user_email . "'";
+            $data = $conn->query($query);
+            $id = $data->fetch_assoc()['id'];
+            $query = "UPDATE users SET status = 1 WHERE id = " . $id;
+            $conn->query($query);
             $gender = $_POST['gender'];
             $hobbies = $_POST['hobbies'];
             $msg = "INSERT INTO user_details (user_id, image, city, state, zip, gender, hobbie1, hobbie2) VALUES ($id, '$image_name[0]', '$city', '$state', $zip, '$gender', '$hobbies[0]', '$hobbies[1]');";
-            $msg2 = 'SELECT * FROM user_details where user_id = ' . $id;
-            $data1 = $conn->query($msg2);
-            if ($data1->num_rows > 0) {
-                header("Location: updateprofile.php");
-            } else if ($conn->query($msg) === TRUE) {
-                header("Location: index.php?msg=ProfileCompleted");
-            }
+            $data1 = $conn->query($msg);
+            header('Location: login.php?msg=profileCompleted');
         }
     }
     ?>
@@ -85,7 +104,6 @@
                         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                             <div class="card" style="border-radius: 15px;">
                                 <div class="card-body p-4">
-                                    <!-- <h2 class=" text-uppercase text-center mt-2"><?php echo $user_name . " " ?><img width="40" height="40" src="https://img.icons8.com/3d-fluency/40/rocket.png" alt="rocket" /></h2> -->
                                     <h2 class='text-uppercase text-center mb-4'>Complete your profile</h2>
                                     <form class="row g-3 mt-4" method="post" enctype="multipart/form-data">
                                         <!-- Upload profile picture -->
@@ -94,7 +112,7 @@
                                                 <div class="mb-2">
                                                     <label for="formFile" class="form-label">Upload profile picture</label>
                                                     <input class="form-control" name="image[]" type="file" id="formFile">
-                                                    <img style="max-width:250px; max-height:150px; cursor: url(MyCss/Images/cursor.png),auto; display: none;"class="uImg" alt="img">
+                                                    <img style="max-width:250px; max-height:150px; cursor: url(MyCss/Images/cursor.png),auto; display: none;" class="uImg" alt="img">
                                                     <span id='image'></span>
                                                 </div>
                                                 <!-- City -->
@@ -211,7 +229,7 @@
                                         </div>
                                         <!-- Submit button -->
                                         <div class="mt-4 mb-8 d-flex justify-content-around">
-                                            <button style="background-color: #1cc88a;" name='complete' type="submit" class="btn btn-success">Complete</button>
+                                            <button style="background-color: #1cc88a;" name='complete' type="submit" class="btn btn-secondary">Complete</button>
                                         </div>
                                     </form>
                                 </div>
@@ -236,7 +254,7 @@
             }
             reader.readAsDataURL(file);
         });
-        
+
         setTimeout(() => {
             document.getElementById('popUp').style.display = 'none';
         }, 3000);

@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Vendors</title>
 
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="MyCss/assets/style.css">
-    <link href="MyCss/assets/font.css" rel="stylesheet">
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="MyCss/assets/style.js"></script>
-    <script src="MyCss/assets/jquery.js"></script>
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../MyCss/assets/style.css">
+    <link href="../MyCss/assets/font.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="../MyCss/assets/style.js"></script>
+    <script src="../MyCss/assets/jquery.js"></script>
 </head>
 
 <?php
@@ -30,6 +30,31 @@ $user = $res2->fetch_array();
 $Countryquery = 'SELECT id, name FROM `countries`';
 $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2';
 $data1 = $conn->query($selectVendor);
+
+if (isset($_GET['sort']) && isset($_GET['page'])) {
+    $sort = $_GET['sort'];
+    $page = $_GET['page'];
+    if ($sort == 'name') {
+        $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 ORDER BY fname Limit ' . ($page - 1) * 5 . ', 5';
+    } else if ($sort == 'Bname') {
+        $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 ORDER BY Bname Limit ' . ($page - 1) * 5 . ', 5';
+    }
+} else if (isset($_GET['sort'])) {
+    $sort = $_GET['sort'];
+    if ($sort == 'name') {
+        $page = 1;
+        $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 ORDER BY fname Limit 5';
+    } else if ($sort == 'Bname') {
+        $page = 1;
+        $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 ORDER BY Bname Limit 5';
+    }
+} else if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 LIMIT ' . ($page - 1) * 5 . ', 5';
+} else {
+    $page = 1;
+    $selectVendor = 'Select users.id, fname, lname, email, Btype, Bname  from users inner join user_details where users.id = user_details.user_id && users.user_type = 2 LIMIT 0, 5';
+}
 ?>
 
 <body id="page-top">
@@ -38,46 +63,51 @@ $data1 = $conn->query($selectVendor);
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul style="background-color: #1cc88a;" class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Admin Dashboard </div>
+                <img width="50px" src="https://assets.bootstrapemail.com/logos/light/square.png" alt="">
             </a>
 
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            <hr class="sidebar-divider my-1">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                <a class="nav-link text-black-50" href="index.php">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-add-fill" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 1 1-1 0v-1h-1a.5.5 0 1 1 0-1h1v-1a.5.5 0 0 1 1 0" />
+                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+                        <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293z" />
+                    </svg>
                     <span>Dashboard</span></a>
             </li>
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading text-black-50">
                 Pages
             </div>
             <li class="nav-item active">
-                <a class="nav-link collapsed" href="vendor.php">
-                    <i class="fas fa-clipboard-list fa-fw text-gray-300"></i>
+                <a class="nav-link text-black-50 collapsed" href="vendor.php">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-bookmark-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 1h6v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z" />
+                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                    </svg>
                     <span>Vendors</span>
                 </a>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="products.php">
+                <a class="nav-link text-black-50 collapsed" href="#">
                     <i class="fas fa-clipboard-list fa-fw text-gray-300"></i>
                     <span>Products</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
+                <a class="nav-link text-black-50 collapsed" href="#">
                     <i class="fas fa-clipboard-list fa-fw text-gray-300"></i>
                     <span>Categories</span>
                 </a>
@@ -111,7 +141,7 @@ $data1 = $conn->query($selectVendor);
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $user[2] ?></span>
-                                <img class="img-profile rounded-circle" src="MyCss/images/<?php echo $details[2] ?>">
+                                <img class="img-profile rounded-circle" src="../MyCss/images/<?php echo $details[2] ?>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -140,10 +170,10 @@ $data1 = $conn->query($selectVendor);
                         <h1 class="h3 mb-0 text-gray-800">Vendors</h1>
                     </div>
                     <!-- Card and Create Vendor -->
-                    <div class="d-flex align-items-end mb-4 justify-content-between">
+                    <div class="d-flex flex-wrap align-items-end mb-2 justify-content-between">
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 ps-0 pe-2">
-                            <div class="card border-left-success shadow h-100 py-2">
+                        <div class="col-xl-3 col-md-6 ps-0 pe-2 mb-2">
+                            <div class="card border-left-secondary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -158,28 +188,51 @@ $data1 = $conn->query($selectVendor);
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex">
-                            <div class="pe-3 d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+
+                        <div class="d-flex mb-2">
+                            <div class="list-group list-group-horizontal pe-3">
+                                <?php
+                                if (isset($_GET['sort'])) {
+                                    if ($_GET['sort'] == 'name') {
+                                        echo '<span class="btn me-1">Sort By Name</span>
+                                    <a href="vendor.php" class="btn btn-outline-secondary">Clear Filter</a>';
+                                    } else if ($_GET['sort'] == 'Bname') {
+                                        echo '<span class="btn me-1">Sort By Business Name</span>
+                                    <a href="vendor.php" class="btn btn-outline-secondary">Clear Filter</a>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <div class="dropdown pe-3">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                                        <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z" />
+                                    </svg>&nbsp;Filter</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="vendor.php?sort=name">By Name</a></li>
+                                    <li><a class="dropdown-item" href="vendor.php?sort=Bname">By Business Name</a></li>
+                                </ul>
+                            </div>
+                            <div class="pe-3 d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search">
                                 <div class="input-group">
-                                    <input type="text" id="searchVen" class="form-control bg-outline-success border-1 border-success small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <input type="text" id="searchVen" class="form-control bg-outline-secondary border-1 border-secondary small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn btn-success" type="button">
+                                        <button class="btn btn-secondary" type="button">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#AddVendor">+ Create Vendor</button>
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#AddVendor">+ Create Vendor</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Vendor Table -->
                     <div class="mb-4">
-                        <table class="table table-success table-striped">
-                            <thead class="table-light">
-                                <tr class="table-active">
+                        <table class="table table-striped">
+                            <thead class="">
+                                <tr>
                                     <th scope="col">Id</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
@@ -190,20 +243,19 @@ $data1 = $conn->query($selectVendor);
                             </thead>
                             <tbody id="venTable">
                                 <?php
-                                $i = 0;
-                                $selectVendor .= ' LIMIT 5';
+                                $i = $page * 5 - 5;
                                 $data2 = $conn->query($selectVendor);
                                 while ($res = $data2->fetch_array()) {
                                     echo "<tr'>";
-                                    echo "<td class='table-active'>" . ++$i . "</td>";
+                                    echo "<td>" . ++$i . "</td>";
                                     echo "<td>" . $res['fname'] . " " . $res['lname'] . "</td>";
                                     echo "<td>" . $res['email'] . "</td>";
                                     echo "<td>" . $res['Btype'] . "</td>";
                                     echo "<td>" . $res['Bname'] . "</td>";
                                     echo '<td>
                                         <a href="vendor/view?' . $res['email'] . '"><img src="MyCss/images/eye.png" alt=""></a>
-                                        <a href="vendor/edit?' . $res['email'] . '"><img src="MyCss/images/cursor.png" alt=""></a>
-                                        <a href="vendor/delete?' . $res['email'] . '"><img src="MyCss/images/delete.png" alt=""></a>
+                                        <a href="../vendor/edit?' . $res['email'] . '"><img src="../MyCss/images/cursor.png" alt=""></a>
+                                        <a href="vendor/delete?' . $res['email'] . '"><img src="../MyCss/images/delete.png" alt=""></a>
                                     </td>';
                                     echo "</tr>";
                                 }
@@ -212,17 +264,36 @@ $data1 = $conn->query($selectVendor);
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6">
-                                        <nav aria-label="">
-                                            <ul class="pagination d-flex justify-content-center">
+                                    <td colspan="6" class="">
+                                        <nav aria-label="" class="d-flex justify-content-center">
+                                            <ul class="pagination">
                                                 <?php
                                                 $total_pages = $data1->num_rows;
                                                 $total_pages = ceil($total_pages / 5);
-
-                                                for ($i = 1; $i <= $total_pages; $i++) {
-                                                    echo "<li class='page-item'><a class='page-link' id='pagination1'>" . $i . "</a></li>";
+                                                if (isset($_GET['sort'])) {
+                                                    $sort = $_GET['sort'];
+                                                    for ($i = 1; $i <= $total_pages; $i++) {
+                                                        echo "<li class='page-item'><a class='page-link' href='vendor.php?sort=$sort&page=" . $i . "'>" . $i . "</a></li>";
+                                                    }
+                                                } else {
+                                                    for ($i = 1; $i <= $total_pages; $i++) {
+                                                        echo "<li class='page-item'><a class='page-link' href='vendor.php?page=" . $i . "'>" . $i . "</a></li>";
+                                                    }
                                                 }
                                                 ?>
+                                            </ul>
+                                            <ul class="pagination ps-4">
+                                                <li class='page-item page-link'>
+                                                    <?php
+                                                    $count = $page * 5;
+                                                    if (isset($searchQuery)) {
+                                                        $count = $searchQuery->num_rows;
+                                                    } else if ($count > $data1->num_rows) {
+                                                        $count = $data1->num_rows;
+                                                    }
+                                                    echo $count . " / " . $data1->num_rows
+                                                    ?>
+                                                </li>
                                             </ul>
                                         </nav>
                                     </td>
@@ -375,7 +446,7 @@ $data1 = $conn->query($selectVendor);
                             </div>
                             <!-- Submit button -->
                             <div class="mt-4 mb-8 d-flex justify-content-around">
-                                <button name='vendorAdd' onclick="addVendor()" type="button" class="btn btn-success">Add Vendor</button>
+                                <button name='vendorAdd' onclick="addVendor()" type="button" class="btn btn-secondary">Add Vendor</button>
                             </div>
                         </form>
                     </div>
@@ -388,24 +459,24 @@ $data1 = $conn->query($selectVendor);
 
 
     <script>
-        document.querySelectorAll('.page-link').forEach(item => {
-            item.addEventListener('click', event => {
-                jQuery.ajax({
-                    type: 'POST',
-                    url: 'action.php',
-                    data: {
-                        methodName: 'pagination',
-                        page: item.innerText
-                    },
-                    success: function(res) {
-                        document.getElementById('venTable').innerHTML = res;
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error('Error: ' + textStatus, errorThrown); // Handle any errors
-                    }
-                });
-            })
-        });
+        // document.querySelectorAll('.page-link').forEach(item => {
+        //     item.addEventListener('click', event => {
+        //         jQuery.ajax({
+        //             type: 'POST',
+        //             url: 'action.php',
+        //             data: {
+        //                 methodName: 'pagination',
+        //                 page: item.innerText
+        //             },
+        //             success: function(res) {
+        //                 document.getElementById('venTable').innerHTML = res;
+        //             },
+        //             error: function(jqXHR, textStatus, errorThrown) {
+        //                 console.error('Error: ' + textStatus, errorThrown); // Handle any errors
+        //             }
+        //         });
+        //     })
+        // });
 
         document.getElementById('searchVen').addEventListener('change', function() {
             var a = document.getElementById('searchVen').value;
@@ -591,7 +662,7 @@ $data1 = $conn->query($selectVendor);
             }
             if (flag) {
                 jQuery.ajax({
-                    url: 'action.php',
+                    url: 'action.php', 
                     type: 'POST',
                     data: {
                         methodName: 'addVendor',
@@ -607,8 +678,15 @@ $data1 = $conn->query($selectVendor);
                         Bname: Bname
                     },
                     success: function(res) {
-                        console.log(fname, lname, email, phone, country, state, city, zip, businessT, Bname, res);
-                        window.location.href = 'vendor.php';
+                        if(res == "Email already exists<br>"){
+                            document.getElementById('email').innerHTML = 'Email already exists';
+                        }else if(res == "Please fill the city<br>"){
+                            document.getElementById('city').innerHTML = 'City is required';
+                        }
+                        else{
+                            console.log(res);
+                             window.location.href = 'vendor.php';
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.error('Error: ' + textStatus, errorThrown); // Handle any errors

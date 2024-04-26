@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Customer SignUp Page</title>
+    <title>Vendor SignUp Page</title>
+    <link rel="stylesheet" href="style.css">
     <link href="MyCss/assets/style.css" rel="stylesheet">
     <script src="MyCss/assets/style.js"></script>
 </head>
@@ -60,10 +61,10 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-success">Register</button>
+                                        <button name="submit" type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-block btn-lg gradient-custom-4">Register</button>
                                     </div>
 
-                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="alogin.php" class="fw-bold text-body"><u>Login here</u></a></p>
+                                    <p class="text-center text-muted mt-2 mb-0">Have already an account? <a href="login.php" class="fw-bold text-body"><u>Login here</u></a></p>
 
                                 </form>
 
